@@ -1,5 +1,25 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+    script(type="text/x-handlebars")
+        .container
+            h1
+                p
+                    img(src="/img/alien.jpg", style="height:100px;width:140px")
+                    X Files UFO report browser
+
+            {{outlet}}
+
+    script(type="text/x-handlebars", data-template-name="sightings")
+        h3 Sightings
+        .row
+            .col-lg-4
+                {{#each}}
+                .well
+                    {{#link-to 'sighting' this}} {{description}} {{/link-to}}
+                {{/each}}
+            .col-lg-8
+                {{outlet}}
+
+    script(type="text/x-handlebars", data-template-name="sighting")
+        h1 {{description}}
