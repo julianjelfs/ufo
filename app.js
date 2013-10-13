@@ -33,7 +33,7 @@ console.log("connecting to mongo on " + process.env.MONGODB_UFO_URI);
 mongoose.connect(process.env.MONGODB_UFO_URI);
 
 app.get('/', routes.index);
-app.get('/sightings', sighting.list);
+app.get('/api/sightings', sighting.list);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

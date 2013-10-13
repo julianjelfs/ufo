@@ -25,7 +25,9 @@ exports.list = function(req, res){
                 for(var i= 0, l=sightings.length; i<l; i++){
                     retVal.sightings.push({
                         id : sightings[i]._id,
-                        description : ent.decode(sightings[i].description)
+                        description : ent.decode(sightings[i].description),
+                        sighted_at : sightings[i].sighted_at,
+                        reported_at : sightings[i].reported_at
                     });
                 }
                 res.json(retVal);

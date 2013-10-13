@@ -6,7 +6,7 @@ block content
             h1
                 p
                     img(src="/img/alien.jpg", style="height:100px;width:140px")
-                    X Files UFO report browser
+                    {{#link-to 'sightings'}} X Files UFO report browser {{/link-to}}
 
             {{outlet}}
 
@@ -16,10 +16,36 @@ block content
             .col-lg-4
                 {{#each}}
                 .well
-                    {{#link-to 'sighting' this}} {{truncate description}} {{/link-to}}
+                     blockquote
+                        {{#link-to 'sighting' this}}
+                        {{truncate description}}
+                        {{/link-to}}
+                     p
+                     p
+                        i Sighted {{parseDate sighted_at}}
+                {{/each}}
+            .col-lg-8
+                {{outlet}}
+
+    script(type="text/x-handlebars", data-template-name="index")
+        h3 Sightings
+        .row
+            .col-lg-4
+                {{#each}}
+                .well
+                     blockquote
+                        {{#link-to 'sighting' this}}
+                        {{truncate description}}
+                        {{/link-to}}
+                     p
+                     p
+                        i Sighted {{parseDate sighted_at}}
+
                 {{/each}}
             .col-lg-8
                 {{outlet}}
 
     script(type="text/x-handlebars", data-template-name="sighting")
-        h1 {{description}}
+        .well
+            h2
+                {{description}}
