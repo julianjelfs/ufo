@@ -1,23 +1,26 @@
 App = Ember.Application.create();
 
-//App.ApplicationAdapter = DS.FixtureAdapter.extend();
+App.Store = DS.Store.extend({
+    revision: 13,
+    adapter: DS.FixtureAdapter.create()
+});
 
 App.Router.map(function(){
     this.resource("sightings", { path : "/" }, function(){
-        this.resource("sighting", {path:":sighting_id"})
+        this.resource("sighting", {path:"sightings/:sighting_id"})
     });
 
 });
 
 App.SightingsRoute = Ember.Route.extend({
     model: function () {
-        return sightings;
+        return this.get("store").find("sighting");
     }
 });
 
 App.SightingRoute = Ember.Route.extend({
     model: function(params) {
-        return sightings.findBy('id', params.sighting_id);
+        return this.get("store").find("sighting", params.sighting_id);
     }
 });
 
@@ -30,7 +33,8 @@ App.Sighting = DS.Model.extend({
     description : DS.attr('string')
 });
 
-var sightings = [
+App.Sighting.FIXTURES = [
+//var sightings = [
     {
         id: 1,
         sighted_at: "19961010",
