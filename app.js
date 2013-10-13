@@ -5,9 +5,10 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , user = require('./routes/user')
+  , sighting = require('./routes/sighting')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+    , mongoose = require("mongoose");
 
 var app = express();
 
@@ -27,8 +28,12 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+console.log("connecting to mongo on " + process.env.MONGODB_UFO_URI);
+
+mongoose.connect(process.env.MONGODB_UFO_URI);
+
 app.get('/', routes.index);
-app.get('/users', user.list);
+app.get('/sightings', sighting.list);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

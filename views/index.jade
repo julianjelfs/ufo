@@ -16,7 +16,7 @@ block content
             .col-lg-4
                 {{#each}}
                 .well
-                    {{#link-to 'sighting' this}} {{description}} {{/link-to}}
+                    {{#link-to 'sighting' this}} {{truncate description}} {{/link-to}}
                 {{/each}}
             .col-lg-8
                 {{outlet}}

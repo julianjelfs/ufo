@@ -1,9 +1,10 @@
 App = Ember.Application.create();
 
+/*
 App.Store = DS.Store.extend({
     revision: 13,
     adapter: DS.FixtureAdapter.create()
-});
+});*/
 
 App.Router.map(function(){
     this.resource("sightings", { path : "/" }, function(){
@@ -13,8 +14,12 @@ App.Router.map(function(){
 });
 
 App.SightingsRoute = Ember.Route.extend({
-    model: function () {
-        return this.get("store").find("sighting");
+    model: function (params) {
+        var page = params.page || 0;
+        return this.get("store").findQuery("sighting", {
+            limit : 10,
+            offset : page * 10
+        });
     }
 });
 
@@ -33,47 +38,8 @@ App.Sighting = DS.Model.extend({
     description : DS.attr('string')
 });
 
-App.Sighting.FIXTURES = [
-//var sightings = [
-    {
-        id: 1,
-        sighted_at: "19961010",
-        reported_at: "19961111",
-        location:"Utah",
-        shape:"oblong",
-        duration:"10 minutes",
-        description:"I saw a great big UFO I did"
-    },{
-        id: 2,
-        sighted_at: "19961010",
-        reported_at: "19961111",
-        location:"Utah",
-        shape:"oblong",
-        duration:"10 minutes",
-        description:"It was a massive load of flashing lights"
-    },{
-        id: 3,
-        sighted_at: "19961010",
-        reported_at: "19961111",
-        location:"Utah",
-        shape:"oblong",
-        duration:"10 minutes",
-        description:"I don't know what it was"
-    },{
-        id: 4,
-        sighted_at: "19961010",
-        reported_at: "19961111",
-        location:"Utah",
-        shape:"oblong",
-        duration:"10 minutes",
-        description:"All the clocks stopped"
-    },{
-        id: 5,
-        sighted_at: "19961010",
-        reported_at: "19961111",
-        location:"Utah",
-        shape:"oblong",
-        duration:"10 minutes",
-        description:"Definitely some rectal coring occurred"
-    }
-];
+Ember.Handlebars.helper('truncate', function(value, options) {
+    return value.length > 100
+        ?  value.substring(0, 100) + "..."
+        : value;
+});
