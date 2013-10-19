@@ -1,6 +1,6 @@
 'user strict';
 
-var ufo = angular.module('ufo', ['ngRoute', 'ngSanitize']).
+var ufo = angular.module('ufo', ['ngRoute', 'ngSanitize', 'ngAnimate']).
     config(['$routeProvider', function($routeProvider){
         $routeProvider.when('/', {templateUrl : 'partials/home', controller : 'HomeCtrl'})
     }])
@@ -9,15 +9,16 @@ var ufo = angular.module('ufo', ['ngRoute', 'ngSanitize']).
         $scope.offset = 0;
 
         $http.get('api/sightings?limit='+ $scope.limit +'&offset='+ $scope.offset).success(function(data){
-            $scope.sightings = data.sightings;
+            $scope.sightings = data.sightings.results;
         });
         $scope.select = function(s) {
             $scope.selected = s;
         }
         $scope.search = function(){
+            $scope.selected = null;
+            $scope.sightings = [];
             $http.get('api/sightings?limit='+ $scope.limit +'&offset='+ $scope.offset + '&s='+ $scope.searchTerm).success(function(data){
-                $scope.selected = null;
-                $scope.sightings = data.sightings;
+                $scope.sightings = data.sightings.results;
             });
         }
         $scope.glimpseClass = function(s){
@@ -26,10 +27,10 @@ var ufo = angular.module('ufo', ['ngRoute', 'ngSanitize']).
         }
     }])
     .filter('truncate', function(){
-        return function(val){
+        return function(val, limit){
             if(!val) return val;
             var l = val.length;
-            return l > 100 ? val.substring(0, 100) + '...' : val;
+            return l > limit ? val.substring(0, limit) + '<a> ... more</a>' : val;
         }
     })
     .filter('highlight', function(){

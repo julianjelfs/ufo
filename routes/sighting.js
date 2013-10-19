@@ -15,6 +15,7 @@ exports.search = function(req, res) {
         if(err){
             res.send(500, err);
         }
+        console.log(sightings);
         res.json({"sightings" : sightings});
     });
 }

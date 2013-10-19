@@ -12,6 +12,7 @@ var Sighting = new Schema({
 });
 
 Sighting.plugin(textSearch);
+
 Sighting.index({
     description : "text"
 });
