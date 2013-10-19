@@ -1,0 +1,16 @@
+.header
+    h1 X-files ufo sightings browser
+
+    .row
+        .col-lg-4
+            p
+                .input-group
+                    input.form-control(type='text', placeholder='search', ng-model='searchTerm')
+                    span.input-group-btn
+                        button.btn.btn-default(type='button', ng-click='search()', ng-disabled='!searchTerm') Go
+            .well.well-sm.glimpse(ng-class='glimpseClass(s)', ng-click=('select(s)') ng-repeat='s in sightings')
+                {{s.description|truncate}}
+        .col-lg-8
+            .well(ng-show='selected')
+                h3(ng-bind-html='selected.description|highlight:searchTerm')
+

@@ -1,62 +1,51 @@
-(function (){
+'user strict';
 
-App = Ember.Application.create();
+var ufo = angular.module('ufo', ['ngRoute', 'ngSanitize']).
+    config(['$routeProvider', function($routeProvider){
+        $routeProvider.when('/', {templateUrl : 'partials/home', controller : 'HomeCtrl'})
+    }])
+    .controller('HomeCtrl', ['$scope', '$http', function($scope, $http){
+        $scope.limit = 10;
+        $scope.offset = 0;
 
-App.ApplicationAdapter = DS.RESTAdapter.extend({
-    namespace: 'api'
-});
-
-App.Router.map(function(){
-    this.resource("sightings", function(){
-        this.resource("sighting", {path:":sighting_id"})
+        $http.get('api/sightings?limit='+ $scope.limit +'&offset='+ $scope.offset).success(function(data){
+            $scope.sightings = data.sightings;
+        });
+        $scope.select = function(s) {
+            $scope.selected = s;
+        }
+        $scope.search = function(){
+            $http.get('api/sightings?limit='+ $scope.limit +'&offset='+ $scope.offset + '&s='+ $scope.searchTerm).success(function(data){
+                $scope.selected = null;
+                $scope.sightings = data.sightings;
+            });
+        }
+        $scope.glimpseClass = function(s){
+            if(!$scope.selected) return '';
+            return s == $scope.selected ? 'selected':'';
+        }
+    }])
+    .filter('truncate', function(){
+        return function(val){
+            if(!val) return val;
+            var l = val.length;
+            return l > 100 ? val.substring(0, 100) + '...' : val;
+        }
+    })
+    .filter('highlight', function(){
+        return function(text, val){
+            if(!val || !text)
+                return text;
+            var tl = text.toLowerCase();
+            var vl = val.toLowerCase();
+            var start = tl.indexOf(val);
+            if(start < 0)
+                return text;
+            var end = start + val.length;
+            return text.substring(0, start)
+                +'<span class="highlight">'
+                + text.substring(start, end)
+                + '</span>'
+                + text.substring(end);
+        }
     });
-});
-
-function getSightings(limit, offset){
-    var store = this.get("store");
-    var s = store.findQuery("sighting", {
-        limit : limit,
-        offset : offset
-    });
-    return s;
-}
-
-App.IndexRoute = Ember.Route.extend({
-    model : function(){
-        return getSightings.call(this,10,0);
-    }
-});
-
-App.SightingsRoute = Ember.Route.extend({
-    model: function (params) {
-        console.log(params);
-        var page = params.page || 0;
-        return getSightings.call(this, 10, (page*10));
-    }
-});
-
-App.Sighting = DS.Model.extend({
-    sighted_at : DS.attr('string'),
-    reported_at : DS.attr('string'),
-    location : DS.attr('string'),
-    shape : DS.attr('string'),
-    duration : DS.attr('string'),
-    description : DS.attr('string')
-});
-
-Ember.Handlebars.helper('truncate', function(value, options) {
-    return value.length > 100
-        ?  value.substring(0, 100) + "..."
-        : value;
-});
-
-Ember.Handlebars.helper('parseDate', function(value) {
-    var regex = /^([0-9]{4})([0-9]{2})([0-9]{2})$/;
-    var match = value.match(regex);
-    return match.length === 4
-        ? (match[3] + "-" + match[2] + "-" + match[1])
-        : value;
-});
-
-
-}());

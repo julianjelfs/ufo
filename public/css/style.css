@@ -6,3 +6,16 @@ body {
 a {
   color: #00B7FF;
 }
+
+.highlight {
+    background-color: #ffff00;
+    font-weight: bold;
+}
+
+.glimpse {
+    cursor: pointer;
+}
+
+.selected {
+    border-color: red !important;
+}

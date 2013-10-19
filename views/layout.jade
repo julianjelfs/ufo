@@ -4,12 +4,13 @@ html
     title= title
     link(rel='stylesheet', href='/css/style.css')
     link(rel='stylesheet', href='/css/bootstrap.css')
-  body
-    block content
+  body(ng-app='ufo')
+
+    div.container(ng-view)
 
     script(type="text/javascript", src="/js/jquery.js")
     script(type="text/javascript", src="/js/bootstrap.js")
-    script(type="text/javascript", src="/js/handlebars.js")
-    script(type="text/javascript", src="/js/ember.js")
-    script(type="text/javascript", src="/js/ember-data.js")
+    script(type="text/javascript", src="/js/angular.js")
+    script(type="text/javascript", src="/js/angular-route.js")
+    script(type="text/javascript", src="/js/angular-sanitize.js")
     script(type="text/javascript", src="/js/app.js")
